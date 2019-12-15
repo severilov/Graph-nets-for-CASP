@@ -1,0 +1,20 @@
+\begin{thebibliography}{1}
+
+\bibitem{10.1093/bioinformatics/btz122}
+Guillaume Pagès, Benoit Charmettant, and Sergei Grudinin.
+\newblock {Protein model quality assessment using 3D oriented convolutional
+  neural networks}.
+\newblock {\em Bioinformatics}, 35(18):3313--3319, 02 2019.
+
+\bibitem{DBLP:journals/corr/abs-1901-00596}
+Zonghan Wu, Shirui Pan, Fengwen Chen, Guodong Long, Chengqi Zhang, and
+  Philip~S. Yu.
+\newblock A comprehensive survey on graph neural networks.
+\newblock {\em CoRR}, abs/1901.00596, 2019.
+
+\bibitem{DBLP:journals/corr/abs-1812-08434}
+Jie Zhou, Ganqu Cui, Zhengyan Zhang, Cheng Yang, Zhiyuan Liu, and Maosong Sun.
+\newblock Graph neural networks: {A} review of methods and applications.
+\newblock {\em CoRR}, abs/1812.08434, 2018.
+
+\end{thebibliography}

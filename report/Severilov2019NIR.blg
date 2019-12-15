@@ -1,0 +1,46 @@
+This is BibTeX, Version 0.99d (TeX Live 2016)
+Capacity: max_strings=35307, hash_size=35307, hash_prime=30011
+The top-level auxiliary file: Severilov2019NIR.aux
+The style file: plain.bst
+Database file #1: Severilov2019NIR.bib
+You've used 3 entries,
+            2118 wiz_defined-function locations,
+            517 strings with 4669 characters,
+and the built_in function-call counts, 1132 in all, are:
+= -- 100
+> -- 84
+< -- 0
++ -- 34
+- -- 30
+* -- 96
+:= -- 211
+add.period$ -- 9
+call.type$ -- 3
+change.case$ -- 24
+chr.to.int$ -- 0
+cite$ -- 3
+duplicate$ -- 31
+empty$ -- 64
+format.name$ -- 30
+if$ -- 216
+int.to.chr$ -- 0
+int.to.str$ -- 3
+missing$ -- 3
+newline$ -- 18
+num.names$ -- 6
+pop$ -- 18
+preamble$ -- 1
+purify$ -- 21
+quote$ -- 0
+skip$ -- 23
+stack$ -- 0
+substring$ -- 43
+swap$ -- 3
+text.length$ -- 0
+text.prefix$ -- 0
+top$ -- 0
+type$ -- 12
+warning$ -- 0
+while$ -- 7
+width$ -- 4
+write$ -- 35

@@ -6,5 +6,7 @@
 
 [Актуальная версия отчета](https://github.com/severilov/Graph-nets-for-CASP/blob/master/report/Severilov2019NIR.pdf)
 
+pip3 install -r requirements.txt 
+
 
 <img src='./pics/proteins.png' alt='proteins' width="600"/>

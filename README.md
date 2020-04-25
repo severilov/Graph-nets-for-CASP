@@ -9,6 +9,6 @@
 pip3 install -r requirements.txt 
 
 
-<center>
-  <img src='./pics/1.png' alt='proteins' width="600"/>
-</center>
+<p align="center">
+  <img width="460" height="300" src="./pics/1.png">
+</p>

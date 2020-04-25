@@ -10,5 +10,5 @@ pip3 install -r requirements.txt
 
 
 <p align="center">
-  <img width="460" height="300" src="./pics/1.png">
+  <img width="760" height="300" src="./pics/1.png">
 </p>

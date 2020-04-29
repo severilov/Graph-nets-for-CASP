@@ -5,6 +5,8 @@
 %\NOREVIEWERNOTES
 
 \usepackage{wrapfig}
+\usepackage{subfloat}
+\usepackage{caption}
 
 \graphicspath{{../pics/}}
 %\epstopdfDeclareGraphicsRule{.pdf}{png}{.png}{convert #1 \OutputFile}
@@ -12,7 +14,7 @@
 
 \title
 [Графовые сверточные сети для оценки качества структуры белка]
-{Оценка качества прогнозирования структуры белка с использованием сверточных графовых нейронных сетей.}
+{Оценка качества прогнозирования структуры белка с использованием графовых сверточных нейронных сетей.}
 \author
 [Северилов~П.А.] 
 {Северилов~П.А.$^1$} 
@@ -168,14 +170,39 @@
 	
 	где $\mathbf{W} \in \mathbb{R}^{c \times t}$ – матрица параметров свертки с $t$ фильтрами, $\sigma$ – нелинейная функция активации, а $\mathbf{Z} \in \mathbb{R}^{n \times t}$ -- выходная матрица.
 	
-	\subsection{Проблема размерностей}
-	Каждая молекула белка имеет разное количество атомов. Т.е. для разных белков, матрицы смежности $A$ будут иметь разные размерности.
-	
 		
 	
 	\section{Данные}
 	Берутся с соревнований CASP. Для реальной структуры белка берется еще смоделированная структура. Для них вычисляется CAD-score. Модель на тесте предсказывает CAD-score для смоделированной структуры, не имея возможности напрямую вычислить CAD-score по реальной структуре.
 	
+\begin{table}[H]
+	\begin{minipage}{0.5\linewidth}
+		\centering
+		\begin{tabular}{l|ll|l}
+			\hline Датасет & Таргеты & Модели &  \\
+			\hline CASP 7 & 95 & 19591 & \\
+			CASP 8 & 122 & 34789 &  { Train/Val } \\
+			CASP 9 & 117 & 34946 & \\
+			CASP 10 & 103 & 26254 & \\
+			\hline 
+			CASP 11 & 83 & 16094 & \\
+			CASP 12 & 40 & 6924 & Test \\
+			\hline
+		\end{tabular}
+		\caption{Датасеты}
+		\label{table:student}
+	\end{minipage}\hfill
+	\begin{minipage}{0.45\linewidth}
+		\centering
+		\subfloat[Predicted Atome2\_CBS\_TS4]{\label{fig:edge-a}
+			\includegraphics[scale=0.25]{model_T0861.pdf}}
+		\subfloat[True]{\label{fig:edge-b}
+			\includegraphics[scale=0.25]{target_T0861.pdf}}
+		\captionof{figure}{T0861}
+		\label{fig:edge}
+	\end{minipage}
+\end{table}
+
 	\subsection{Представление белков в виде графов}
 	Элементы аминокислотной последовательности рассматриваются как отдельные узлы, чьи связи (ребра) описывают пространственные отношения между ними. 
 	
@@ -217,7 +244,6 @@
 	\section{Вычислительный эксперимент}
 		
 	
-	\subsection{Архитектуры сетей}
 	Варианты архитектур для классификации, основанных на спектральной теории.
 	\begin{enumerate}
 		%\item Deep Graph Convolutional Neural Network (DGCNN)\cite{Zhang2018AnED}
@@ -230,27 +256,48 @@
 	
 	Основа архитектуры берется из существующей модели, где изменяется выходной слой для работы с задачей регрессии.
 	
-	\section{Результаты и выводы}
-	
-	\subsection{GCN}
-		\begin{figure}[H]
+	\subsection{SpectralQA}
+	На основе модели GCN
+	\begin{figure}[H]
 		\centering
-		\includegraphics[width=0.7\textwidth]{gcn_mse_res.pdf}
+		\includegraphics[width=0.9\textwidth]{training.pdf}
 		\caption{График MSE ошибки GCN на обучающей и тестовой выборке}
 		\label{GCN}
 	\end{figure}
-
+	
 	\begin{table}[H]
-	\centering
-	\begin{tabular}{lcrc}
-		\hline Часть данных & Количество молекул & MSE & Корреляция \\
-		\hline Train & 60 &  & \\
-		Validation & 15 &  &  \\
-		Test &  &  &  \\
-		\hline
-	\end{tabular}
+		\centering
+		\begin{tabular}{lcr}
+			\hline Часть данных & Количество молекул & MSE  \\
+			\hline Train & 190 &  \\
+			Validation & 31 &   \\
+			Test &  &  \\
+			\hline
+		\end{tabular}
 	\end{table}
 	
+	\section{Результаты и выводы}
+	
+	Сравнение с существующими методами QA:
+	\begin{center}
+		\begin{table}[H]
+			\centering
+			\begin{tabular}{l|l|l|l}
+				\hline
+				& $\rho$ &  $r$     &    z-score \\ \hline
+				ProQ3D     & 0.801  &     11.961     & 1.670       \\
+				VoroMQA    & 0.803  &   17.171     & 1.410       \\  
+				SBROD      & 0.685  &    23.579     & 1.282       \\
+				Ornate     & 0.828  &  0.781    & 1.780       \\
+				SpectralQA (МОЯ)&   &      &     
+			\end{tabular}
+			\caption{Сравнение корреляции Пирсона, Спирмена и z-score существующих современных алгоритмов с моделью SpectralQA на данных CASP12}
+			\label{Tab:1}
+		\end{table}
+	\end{center}
+	
+	\section{Заключение}
+	Впервые для задачи оценки качества прогнозирования структуры белка применены графовые сверточные нейронные сети, в которых свертки определены на основе спектральной теории. В качестве улучшения, можно в основе архитектуры сети пробовать другие существующие улучшения спектральных сверток: CayleyNet, Adaptive Graph Convolution Network (AGCN), GRAPH WAVELET NEURAL NETWORK. Также в будущей работе предлагается учитывать в данных дополнительные свойства атомов и в матрице смежности учитывать не только наличие связи, но и расстояния между атомами при наличии связи.
 	
 	%\newpage
 	\bibliographystyle{plain}

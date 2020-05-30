@@ -4,9 +4,9 @@
 --------
 Научный руководитель [В.В. Стрижов](http://www.ccas.ru/strijov/)
 
-[Актуальная версия отчета](https://github.com/severilov/Graph-nets-for-CASP/blob/master/report/Severilov2019NIR.pdf)
+[Актуальная версия отчета](https://github.com/severilov/Graph-nets-for-CASP/blob/master/thesis/Severilov2020BcSThesis.pdf)
 
-pip3 install -r requirements.txt 
+pip3 install -r requirements.txt
 
 
 <p align="center">

@@ -59,14 +59,17 @@
 \begin{frame}{Анализ спектра графовых свёрток}
 \begin{block}{Проблема}
 	%Фолдинг белка происходит в нативную структуру. Процесс фолдинга 
-	Последовательность аминокислот сворачивается в нативную структуру белка. Моделируется структура, в которую произойдет фолдинг. Вычислительно дорого определеить качество смоделированной структуры по отношению к нативной.
+	Последовательность аминокислот сворачивается в нативную структуру белка. Моделируется структура, в которую произойдет сворачивание. Вычислительно дорого определить качество смоделированной структуры по отношению к нативной.
 	%Для нативной структуры белка моделируютсясуществует множество моделей. Вычислительно дорого определить наилучшую для каждой структуры.
 \end{block}
-\begin{block}{Задача предсказания качества структуры (Quality Assessment)}
-	Вычисляется численная мера сходства смоделированной и нативной структур белка. Необходимо построить на основе данных о смоделированной структуре регрессию на численное качество структуры. Для задачи проводятся соревнования CASP.
+\begin{block}{Задача оценки качества структуры (Quality Assessment)}
+	%Вычисляется численное сходство смоделированной и нативной структур белка. 
+	%Необходимо
+	На основе данных о смоделированной структуре построить регрессию на значение качества структуры. Для решения задачи проводятся соревнования CASP.
 \end{block}
 \begin{block}{Предлагается}
-	Проанализировать спектр графовой свёртки и применить к задаче Quality Assessment графовые свёрточные нейронные сети, основанные на спектральной теории графов.
+	Методами спектральной теории графов проанализировать спектр графовой свёртки. Применить графовые свёрточные нейронные сети к задаче Quality Assessment.
+	%Проанализировать спектр графовой свёртки и применить к задаче Quality Assessment графовые свёрточные нейронные сети, основанные на спектральной теории графов.
 \end{block}
 %\begin{block}{Метод (Анализ спектра свёртки ??????)}
 %	Анализ спектра свёртки ??????
@@ -86,11 +89,11 @@
 		\item \textit{Derevyanko G., Grudinin S., Bengio Y., Lamoureux G.} Deep convolutional networks for quality assessment of protein folds // Bioinformatics (Oxford, England), 2018
 		\item \textit{Pag{\`e}s G., Charmettant B., Grudinin S.} Protein model quality assessment using 3D oriented convolutional neural networks // Bioinformatics (Oxford, England), 2019
 		
-		\item \textit{Baldassarre F., Men{\'e}ndez Hurtado D., Elofsson A., Azizpour H. } GraphQA: Protein model quality assessment using graph convolutional network // Submitted to Bioinformatics, 2020
+		%\item \textit{Baldassarre F., Men{\'e}ndez Hurtado D., Elofsson A., Azizpour H. } GraphQA: Protein model quality assessment using graph convolutional network // Submitted to Bioinformatics, 2020
 	\end{itemize}
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Общий слайд}
+\begin{frame}{Оценка качества смоделированной структуры белка}
 %	Графовая свёртка $\mathbf{Z}= \sigma\left(\tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}\right)$
 	
 %	 и формулу задачи оптимизации??
@@ -103,17 +106,38 @@
 \end{figure}
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Постановка задачи регрессии}
+\begin{frame}{Постановка задачи регрессии CAD-score}
 \begin{itemize}
-	\item Дана выборка $$\mathfrak{D} = \left\{\mathbf{x}_i, {y}_i\right\}_{i=1}^m,$$ где $\mathbf{x}_i\in \mathbb{R}^{n_i\times 3}$~-- молекулы, каждая из которых описана множеством 3-мерных координат всех ее $n_i$ атомов
-	\item ${y}_i \in \mathbb{R}$~-- оценка близости предсказанной и реальной структуры белка $\text{CAD}_\text{score}$.
+	\item Дана выборка $$\mathfrak{D} = \left\{\mathbf{x}_i, {y}_i\right\}_{i=1}^m,$$ где $\mathbf{x}_i\in \mathbb{R}^{n_i\times 3}$~-- молекулы, каждая из которых описана множеством 3-мерных координат всех ее $n_i$ атомов, ${y}_i \in \mathbb{R}$~-- оценка близости смоделированной и нативной структуры белка $\text{CAD}_\text{score}$.
 	\item Рассмотривается множество графовых свёрточных нейронных сетей
 	$$\{\mathbf{f}_k\colon(\mathbf{w}, \mathbf{X})\to  \hat{\mathbf{y}} \mid k \in \mathfrak{K}\},$$ где $\mathbf{w} \in \mathbb{W}$~-- параметры модели, $\hat{\mathbf{y}} = \mathbf{f} (\mathbf{X},\mathbf{w}) \in \mathbb{R}^{m}, \mathbf{X} = \bigcup_{i=1}^m \mathbf{x}_i$.
 	\item Функция ошибки
-	$$\mathfrak{L}(\mathbf{y}, \mathbf{X}, \mathbf{w}) =\left\lVert \hat{\mathbf{y}} - \mathbf{y} \right\rVert^{2}_2$$
+	$$\mathfrak{L}(\mathbf{y}, \mathbf{X}, \mathbf{w}) =\left\lVert \hat{\mathbf{y}} - \mathbf{y} \right\rVert^{2}_2.$$
 	\item Решается задача оптимизации: 
-	$$\textbf{w}^* = \underset{\mathbf{w}\in\mathbb{W}}{\text{argmin}}\bigl(\mathfrak{L}(\textbf{w})\bigr)$$
+	$$\textbf{w}^* = \underset{\mathbf{w}\in\mathbb{W}}{\text{argmin}}\bigl(\mathfrak{L}(\textbf{w})\bigr).$$
 \end{itemize}
+\end{frame}
+%-----------------------------------------------------------------------------------------------------
+\begin{frame}{Матрицы смежности графов молекул}
+	Наличие связи между атомами молекулы вычисляется согласно химическим законам.
+	\begin{figure}[H]
+		\centering
+		\begin{minipage}[b]{0.49\textwidth}
+			\centering
+			\includegraphics[width=0.99\textwidth]{3d_graph.pdf}
+			%	\caption{3D визуализация }
+			%	\label{fig:data}
+		\end{minipage}
+		%\hfill
+		\begin{minipage}[b]{0.49\textwidth}
+			\centering
+			\includegraphics[width=0.99\textwidth]{pairwise.pdf}
+			%	\caption{Попарные расстояния между элементами белка}
+			%	\label{fig:data}
+		\end{minipage}
+		\caption{Трехмерное представление с помощью координат $\textbf{X}$ и полученной матрицы смежности $\textbf{A}$ и попарные расстояния между атомами модели BAKER-ROSETTASERVER\_TS3 для нативной структуры T0870 из набора данных CASP12}
+		\label{protein_vis}
+	\end{figure}
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
 \begin{frame}{Графовые свёртки}
@@ -133,7 +157,7 @@
 	\begin{block}{Теорема о свёртках}
 		Преобразование Фурье свёртки двух сигналов является покомпонентным произведением их преобразований Фурье, т.е. $$\mathscr{F}\left( \mathbf{f} * \mathbf{g}\right) =\mathscr{F}(\mathbf{f}) \odot \mathscr{F}(\mathbf{g}).$$
 	\end{block}
-	Применяя теорему, спектральная свёртка на графах определяется для сигнала $\mathbf{x}$ и фильтра $\mathbf{g} \in \mathbb{R}^{n}$ как 
+	Применяя теорему, определяем спектральную свёртку на графах для сигнала $\mathbf{x}$ и фильтра $\mathbf{g} \in \mathbb{R}^{n}$ как 
 	\begin{align*}
 	\mathbf{x} * \mathbf{g} &=\mathscr{F}^{-1}(\mathscr{F}(\mathbf{x}) \odot \mathscr{F}(\mathbf{g})) =\mathbf{U}\left(\mathbf{U}^{\mathsf{T}} \mathbf{x} \odot \mathbf{U}^{\mathsf{T}} \mathbf{g}\right) = \mathbf{U g}_{\theta} \mathbf{U}^{\mathsf{T}} \mathbf{x},
 	\end{align*}
@@ -162,7 +186,7 @@
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=0.8\textwidth]{conv_layer.pdf}
-	\caption{Схема свёртки графа с матрицей $X$, $\text{t}$ -- число фильтров в свёртке, FC -- полносвязный слой. Синий прямоугольник~-- выходная матрица}
+	\caption{Схема свёртки графа с матрицей $\textbf{X}$, $\text{t}$ -- число фильтров в свёртке, FC -- полносвязный слой. Синий прямоугольник~-- выходная матрица}
 \end{figure}
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
@@ -174,38 +198,33 @@
 	\end{figure}
 
 $$f = FC \circ DO \circ pool \circ \sigma \circ u_3\circ\sigma\circ u_2\circ\sigma\circ u_1$$
-$$u_k = \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}$$
+$$\textbf{U}_k = \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}$$
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Матрицы смежности графов молекул}
-	
-\begin{figure}[H]
-	\centering
-	\begin{minipage}[b]{0.49\textwidth}
-		\centering
-		\includegraphics[width=0.99\textwidth]{3d_graph.pdf}
-		%	\caption{3D визуализация }
-		%	\label{fig:data}
-	\end{minipage}
-	%\hfill
-	\begin{minipage}[b]{0.49\textwidth}
-		\centering
-		\includegraphics[width=0.99\textwidth]{pairwise.pdf}
-		%	\caption{Попарные расстояния между элементами белка}
-		%	\label{fig:data}
-	\end{minipage}
-	\caption{Трехмерное представление с помощью координат $X$ и полученной матрицы смежности $A$ и попарные расстояния между атомами модели BAKER-ROSETTASERVER\_TS3 для таргета T0870 из набора данных CASP12}
-	\label{protein_vis}
-\end{figure}
+\begin{frame}{Собственные числа матриц $\textbf{A}, \textbf{U}_k$}
+
+Для примера взята смоделированная структура STRINGS\_TS3 для нативной T0759. Здесь $\textbf{U}_k$~-- матрица после прохождения свёртки.
+	\begin{figure}[H]
+		\begin{minipage}[b]{0.49\textwidth}
+			\centering
+			\includegraphics[width=1.15\textwidth]{T0759_A_before_conv}
+			\caption{Собственные числа матрицы $\textbf{A}$}
+		\end{minipage}
+	\hfill
+		\begin{minipage}[b]{0.49\textwidth}
+			\centering
+			\includegraphics[width=1.15\textwidth]{T0759_X_after_conv}
+			\caption{Собственные числа матрицы $\textbf{U}_k$}
+		\end{minipage}
+	\end{figure}
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Собственное пространство матриц смежности $A$}
-\begin{figure}[h]
+\begin{frame}{Собственное пространство матриц смежности $\textbf{A}, \textbf{U}_k$}
+	Количество собственных чисел матриц $\textbf{A}, \textbf{U}_k$, превосходящих порог. Рассмотрены разные значения порогов $A, U$, соответствующих собственным числам до и после прохождения свёртки.
+
 	\centering
-	%\includegraphics[width=1.02\textwidth]{experiment.pdf}
-	\includegraphics[width=1.05\textwidth]{eigens.png}
-	\caption{Собственое пространство}
-\end{figure}	
+	\includegraphics[width=1.03\textwidth]{eigens.png}
+
 %\begin{figure}[H]
 %	\begin{minipage}[b]{0.49\textwidth}
 %		\centering
@@ -226,18 +245,18 @@ $$u_k = \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{
 \begin{frame}{Вычислительный эксперимент}
 \begin{table}[H]
 	\centering
+	\caption{Наборы данных}
 	\begin{tabular}{p{15mm}|p{17mm}p{16mm}|p{16mm}}
 		\hline Набор & Нативные структуры & Модели структур & Разбиение\\
 		\hline 
-		CASP 7 & 95 & 24183 & \\
-		CASP 8 & 123 & 36176 &  \multirow{2}{*}{Train,} \\
-		CASP 9 & 117 & 35963 &  \multirow{2}{*}{Validation}\\
-		CASP 10 & 103 & 15450 & \\
+		%CASP 7 & 95 & 24183 & \\
+		%CASP 8 & 123 & 36176 &  \multirow{2}{*}{Train,} \\
+		CASP 9 & 117 & 35963 &  \multirow{2}{*}{Train,} \\
+		CASP 10 & 103 & 15450 & \multirow{2}{*}{Validation} \\
 		CASP 11 & 84 & 12291 &  \\
 		\hline 
 		CASP 12 & 37 & 5538 & {Test} \\
 	\end{tabular}
-	\caption{Наборы данных}
 \end{table}
 При обучении нейросети анализируются усредненные по $T$ нативным структурам коэффициенты корреляции Пирсона и Спирмена
 $$\begin{aligned}
@@ -246,12 +265,11 @@ R = R\left(\mathbf{y}, \hat{\mathbf{y}}\right) = \frac{1}{T} \sum_{i=1}^{T} R^\t
 \end{aligned}$$
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
-\begin{frame}{Результаты обучения на $xx$ эпохах}
-\begin{figure}[H]
+\begin{frame}{Результаты обучения на 10 эпохах}
+	Графики корреляций Пирсона и Спирмена стабилизируются
 	\centering
-	\includegraphics[width=0.65\textwidth]{training_correlations.pdf}
-	\caption{Графики корреляций Пирсона и Спирмена стабилизируются}
-\end{figure}
+	\includegraphics[width=0.75\textwidth]{training_correlations_temp.pdf}
+
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
 \begin{frame}{Сравнение с существующими методами Quality Assessment}
@@ -264,9 +282,9 @@ R = R\left(\mathbf{y}, \hat{\mathbf{y}}\right) = \frac{1}{T} \sum_{i=1}^{T} R^\t
 			\hline ProQ3D & 0.801 & 0.750 \\
 			VoroMQA & 0.803 & 0.766  \\
 			SBROD & 0.685 & 0.762  \\
-			Ornate & 0.828 & 0.781   \\
+			Ornate & \textbf{0.828} & 0.781   \\
 			\hline
-			\textbf{SpectralQA} (МОЯ)&   \textbf{0}&   \textbf{0}    \\
+			\textbf{SpectralQA} (данная работа) &   {0.79}&   \textbf{0.83}    \\
 			\hline 
 		\end{tabular}
 		\caption{Сравнение корреляции Пирсона и Спирмена существующих современных алгоритмов с моделью SpectralQA на данных CASP12}
@@ -278,20 +296,21 @@ R = R\left(\mathbf{y}, \hat{\mathbf{y}}\right) = \frac{1}{T} \sum_{i=1}^{T} R^\t
 \begin{frame}{Выносится на защиту}
 \begin{block}{Полученные результаты}
 	\begin{itemize}
+		\item Предложено решение задачи Quality Assessment с использованием графовых сверток
 		\item Проведен анализ графовых свёрток на задаче Quality Assessment
-		\item Метод дает качество, сравимое с остальными современными методами
-		\item Эксперименты в работе показывают новые направления в задаче Quality Assessment
+		\item Полученная модель дает качество, сравнимое с качеством альтернативных моделей
+
 	\end{itemize}
 \end{block}
 \begin{block}{Дальнейшие исследования}
 	\begin{itemize}
 		\item Использовать другие существующие улучшения спектральных свёрток (CayleyNet, Adaptive Graph Convolution Network)
 		\item Учесть дополнительные химические свойства атомов
-		\item Учесть в матрице смежности не только наличие связи, но и расстояния между атомами при наличии связи
+		\item Учесть в матрице смежности расстояния между атомами
 	\end{itemize}
 \end{block}
 \begin{block}{К публикации}
-	\textit{Северилов П.А., Стрижов В.В.} НАЗВАНИЕ
+	\textit{Северилов П.А., Стрижов В.В.} Оценка качества прогнозирования структуры белка с использованием графовых свёрточных нейронных сетей // Computational and Applied Mathematics, 2020
 \end{block}
 \end{frame}
 %----------------------------------------------------------------------------------------------------------

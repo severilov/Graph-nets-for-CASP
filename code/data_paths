@@ -1,0 +1,20 @@
+predictioncenter.org -> CASP* -> parsable data
+
+CASP12 -> targets -> casp12.targets_T0.releaseDec022016.tgz
+CASP12 -> server_predictions -> *stage2.3D.srv.tar.gz
+
+CASP11 -> targets -> casp11.targets_assisted.release11242014.tgz
+CASP11 -> server_predictions -> *stage2.3D.srv.tar.gz
+
+CASP10 -> targets -> casp10.targets_unsplitted.noT0695T0739.tgz
+CASP10 -> server_predictions -> *stage2.3D.srv.tar.gz
+
+CASP9 -> targets -> casp9.targ_unsplit.tgz
+CASP9 -> server_predictions -> *.3D.srv.tar.gz
+
+(-> CASP8 raw data archives)
+CASP8 -> targets -> casp8.targ_unsplit.tar.gz
+CASP8 -> server_predictions -> *.3D.srv.tar.gz
+
+CASP7 -> targets -> Targets_processed.tgz
+CASP7 -> server_predictions -> *.3D.srv.tar.gz

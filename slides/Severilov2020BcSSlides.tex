@@ -175,13 +175,9 @@
 		\begin{align*}
 		\mathbf{x} * \mathbf{g} \approx \tilde{\theta}_{0} \mathbf{x}+\tilde{\theta}_{1}\left(\mathbf{L}-\mathbf{I}_{n}\right) \mathbf{x}=\tilde{\theta}_{0} \mathbf{x}-\tilde{\theta}_{1} \mathbf{D}^{-\frac{1}{2}} \mathbf{A} \mathbf{D}^{-\frac{1}{2}} \mathbf{x} = \theta\left(\mathbf{I}_{n}+\mathbf{D}^{-\frac{1}{2}} \mathbf{A} \mathbf{D}^{-\frac{1}{2}}\right) \mathbf{x}.
 		\end{align*}
-\textit{Трюк перенормировки}: 
-		\begin{align*}
-		\mathbf{I}_{n}+\mathbf{D}^{-\frac{1}{2}} \mathbf{A} \mathbf{D}^{-\frac{1}{2}} \rightarrow
-		\tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}}, 
-		\text{ где }
-		\tilde{\mathbf{A}}=\mathbf{A}+\mathbf{I}_{n},~ \tilde{\mathbf{D}}_{i i}=\sum_{j} \tilde{\mathbf{A}}_{i j}.
-		\end{align*}
+\textit{Трюк перенормировки}: $\tilde{\mathbf{A}}=\mathbf{A}+\mathbf{I}_{n},~ \tilde{\mathbf{D}}_{i i}=\sum_{j} \tilde{\mathbf{A}}_{i j}.$
+
+		$$\boxed{\mathbf{U}= \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}}$$
 
 \begin{figure}[h]
 	\centering
@@ -194,11 +190,12 @@
 	\begin{figure}[h]
 		\centering
 		\includegraphics[width=0.99\textwidth]{net.pdf}
-		\caption{Схематическое представление архитектуры свёрточной нейронной сети, использованной в данной работе}
+		\caption{Структура графовой свёрточной нейронной сети, использованной в данной работе}
 	\end{figure}
 
-$$f = FC \circ DO \circ pool \circ \sigma \circ u_3\circ\sigma\circ u_2\circ\sigma\circ u_1$$
-$$\textbf{U}_k = \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}$$
+Преобразование $f: \mathbf{X} \rightarrow \text{CAD}_\text{score}$ полученной нейросети
+$$f = \langle \mathbf{w}_4, \text{DO} \circ \text{pool} \circ \sigma \left(\mathbf{U}_3\right) \circ\sigma\left( \mathbf{U}_2\right)\circ\sigma\left( \mathbf{U}_1\right)\rangle,$$
+где $\mathbf{U}_k= \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mathbf{D}}^{-\frac{1}{2}} \mathbf{X} \mathbf{W}_k$, $\text{DO}$~-- дропаут, $\text{pool}$~-- максимум по всем узлам графа.
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
 \begin{frame}{Собственные числа матриц $\textbf{A}, \textbf{U}_k$}
@@ -255,7 +252,7 @@ $$\textbf{U}_k = \tilde{\mathbf{D}}^{-\frac{1}{2}} \tilde{\mathbf{A}}\tilde{\mat
 		CASP 10 & 103 & 15450 & \multirow{2}{*}{Validation} \\
 		CASP 11 & 84 & 12291 &  \\
 		\hline 
-		CASP 12 & 37 & 5538 & {Test} \\
+		CASP 12 & 37 & 5501 & {Test} \\
 	\end{tabular}
 \end{table}
 При обучении нейросети анализируются усредненные по $T$ нативным структурам коэффициенты корреляции Пирсона и Спирмена
@@ -268,7 +265,7 @@ R = R\left(\mathbf{y}, \hat{\mathbf{y}}\right) = \frac{1}{T} \sum_{i=1}^{T} R^\t
 \begin{frame}{Результаты обучения на 10 эпохах}
 	Графики корреляций Пирсона и Спирмена стабилизируются
 	\centering
-	\includegraphics[width=0.75\textwidth]{training_correlations_temp.pdf}
+	\includegraphics[width=0.75\textwidth]{training_correlations_smallsettt.pdf}
 
 \end{frame}
 %-----------------------------------------------------------------------------------------------------
@@ -282,9 +279,9 @@ R = R\left(\mathbf{y}, \hat{\mathbf{y}}\right) = \frac{1}{T} \sum_{i=1}^{T} R^\t
 			\hline ProQ3D & 0.801 & 0.750 \\
 			VoroMQA & 0.803 & 0.766  \\
 			SBROD & 0.685 & 0.762  \\
-			Ornate & \textbf{0.828} & 0.781   \\
+			Ornate & \textbf{0.828} & \textbf{0.781}   \\
 			\hline
-			\textbf{SpectralQA} (данная работа) &   {0.79}&   \textbf{0.83}    \\
+			\textbf{SpectralQA} (данная работа) &   {0.746}&   0.647   \\
 			\hline 
 		\end{tabular}
 		\caption{Сравнение корреляции Пирсона и Спирмена существующих современных алгоритмов с моделью SpectralQA на данных CASP12}

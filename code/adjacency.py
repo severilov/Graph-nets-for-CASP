@@ -1,7 +1,3 @@
-"""
-Made by @severilov
-"""
-
 import os
 import numpy as np
 import datetime
